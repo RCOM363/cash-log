@@ -1,0 +1,126 @@
+.signup{
+    width: 30%;
+    margin: 5% auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    padding: 1em;
+    /* border:1px solid black; */
+}
+
+.signup h3{
+    font-size: 2rem;
+}
+
+.signup p{
+    font-size: 1rem;
+    color: darkslategray;
+}
+.signup .cont1{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    /* padding: 1em; */
+    /* border:1px solid black; */
+}
+
+.signup .cont1 .incont{
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    /* padding: 1em;
+    border:1px solid black; */
+}
+
+.signup .cont1 .incont input{
+    width: 100%;
+    padding: 1em;
+    outline: none;
+    border-radius:8px;
+    border:3px solid #DFDFDF;
+}
+
+.signup .cont1 .incont label{
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    padding: 0 0.3em;
+    pointer-events: none;
+    background-color: white;
+    transition: all 0.2s ease;
+}
+
+.signup .cont1 .incont input:focus+label,
+.signup .cont1 .incont input:valid+label,
+.signup .cont1 .incont input:not(:placeholder-shown)+label
+{
+    top:-10px;
+}
+
+.signup .cont1 .incont input:focus{
+    border-color: black;
+    background-color: white;
+}
+
+.signup .cont1.incont input:-webkit-autofill,
+.signup .cont1.incont input:-webkit-autofill:focus {
+  transition: background-color 0s 600000s, color 0s 600000s;
+}
+
+.signup .cont1 .incont span{
+    color: red;
+    font-size: 0.8rem;
+}
+
+.signup button{
+    width: 100%;
+    padding: 1em;
+    outline: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    background-color: black;
+    border-radius:8px;
+    /* border:1px solid black; */
+}
+
+.signup a{
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+}
+
+/* Responsive */
+
+@media (max-width:1280px){
+
+}
+
+@media (max-width:1024px){
+    .signup{
+        width:40%;
+    }
+}
+
+@media (max-width:768px){
+    .signup{
+        width:50%;
+    }
+}
+
+@media (max-width:640px){
+    .signup{
+        width:60%;
+    }
+}
+
+@media (max-width:475px){
+    .signup{
+        width:85%;
+    }
+}

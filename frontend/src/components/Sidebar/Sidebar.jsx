@@ -28,7 +28,7 @@ function Sidebar() {
             </div>
             <div className='links'>
                 <RiMoneyRupeeCircleLine size={20}/>
-                <NavLink to="expenses">Expenses</NavLink>
+                <NavLink to="expenses" >Expenses</NavLink>
             </div>
             <div className='links'>
                 <LuWallet size={20}/>

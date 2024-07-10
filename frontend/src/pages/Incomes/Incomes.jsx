@@ -3,6 +3,7 @@ import axios from 'axios';
 import "./Incomes.css" 
 import { MdDeleteOutline } from "react-icons/md";
 import {useForm} from "react-hook-form";
+import * as XLSX from "xlsx";
 
 
 function Incomes() {
@@ -84,6 +85,13 @@ function Incomes() {
       .catch((err) => console.error(err));
   };
 
+  const exportIncomes = () => {
+    const ws = XLSX.utils.json_to_sheet(incomes);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Incomes");
+    XLSX.writeFile(wb, "incomes.xlsx");
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1em" }}>
       <div className='filtercont'>
@@ -114,6 +122,7 @@ function Incomes() {
           onChange={handleSearch}
           />
           <button onClick={() => setShowModal(true)}>&#43; Add Income</button>
+          <button onClick={exportIncomes}>Export Incomes</button>
           {filteredIncomes.length > 0 ? (
             filteredIncomes.map((income) => (
               <div className='income' key={income._id}>

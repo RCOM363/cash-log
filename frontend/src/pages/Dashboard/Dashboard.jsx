@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Chart from 'chart.js/auto';
 import LineChart from '../../components/LineChart/LineChart';
 import BarChart from '../../components/BarChart/BarChart';
 import PieChart from '../../components/PieChart/PieChart';

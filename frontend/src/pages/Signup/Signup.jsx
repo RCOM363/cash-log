@@ -2,6 +2,8 @@ import axios from 'axios'
 import "./Signup.css";
 import { Link,useNavigate } from 'react-router-dom';
 import {useForm} from "react-hook-form"
+import toast,{Toaster} from 'react-hot-toast';
+import { parseErrorMessage } from '../../components/ParseErrorMessage';
 
 function Signup() {
   
@@ -14,9 +16,13 @@ function Signup() {
       axios.post("/api/v1/users/register",data)
       .then((res)=> {
         console.log(res)
+        toast.success("signed up successfully!");
         navigate("/dashboard")
       })
-      .catch((err)=> console.log(err))
+      .catch((err)=>{
+        console.log(err)
+        toast.error(parseErrorMessage(err.response.data))
+      })
     }    
 
   // Watch password for validation of confirmPassword
@@ -24,6 +30,10 @@ function Signup() {
 
   return (
     <>
+    <Toaster
+  position="top-center"
+  reverseOrder={false}
+/>
     <form 
     onSubmit={handleSubmit(signup)}
     className='signup'

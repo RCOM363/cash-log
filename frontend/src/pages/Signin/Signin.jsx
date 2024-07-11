@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate,Link } from 'react-router-dom';
 import "./Signin.css"
 import { useForm } from 'react-hook-form';
+import toast,{Toaster} from "react-hot-toast";
+import { parseErrorMessage } from '../../components/ParseErrorMessage';
 
 function Signin() {
 
@@ -15,14 +17,22 @@ function Signin() {
     axios.post("/api/v1/users/login",data)
       .then((res)=> {
         console.log(res)
+        toast.success("signed in successfully!");
         navigate("/dashboard")
       })
-      .catch((err)=> console.log(err))
+      .catch((err)=> {
+        console.log(err)
+        toast.error(parseErrorMessage(err.response.data))
+      })
   }
 
   
   return (
     <>
+      <Toaster
+      position="top-center"
+      reverseOrder={false}
+      />
       <form
       className='signin' 
       onSubmit={handleSubmit(signin)} >

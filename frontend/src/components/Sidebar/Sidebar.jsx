@@ -22,18 +22,18 @@ function Sidebar() {
       <div className='sidebar'>
         <div className='cont1'>
             <h3>&#8377;Expense Tracker</h3>
-            <div className='links'>
+            <NavLink className='links' to="" end>
                 <MdOutlineSpaceDashboard size={20}/>
-                <NavLink to="">Dashboard</NavLink>
-            </div>
-            <div className='links'>
-                <RiMoneyRupeeCircleLine size={20}/>
-                <NavLink to="expenses" >Expenses</NavLink>
-            </div>
-            <div className='links'>
-                <LuWallet size={20}/>
-                <NavLink to="incomes">Incomes</NavLink> 
-            </div>
+                <p>Dashboard</p>
+            </NavLink>
+            <NavLink className='links' to="expenses" >
+              <RiMoneyRupeeCircleLine size={20}/>
+              <p>Expenses</p>
+            </NavLink>
+            <NavLink className='links' to="incomes">
+              <LuWallet size={20}/>
+              <p>Incomes</p>
+            </NavLink> 
             <button onClick={handleLogout}><TbLogout/>logout</button>
         </div>
       </div>

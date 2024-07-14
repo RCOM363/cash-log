@@ -61,7 +61,14 @@
     align-items: center;
 }
 
-.expensescont .expense .cont4 button{
+.expensescont .expense .cont4{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1em;
+}
+
+.expensescont .expense .cont4 .delbtn{
     width: 20%;
     display: flex;
     justify-content: center;
@@ -75,4 +82,20 @@
     border: none;
     border-radius: 8px;
     background-color: red;
+}
+
+.expensescont .expense .cont4 .updtbtn{
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
+    padding: 1em;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 400;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    background-color: blue;
 }

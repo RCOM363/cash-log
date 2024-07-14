@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./Incomes.css" 
 import { MdDeleteOutline } from "react-icons/md";
-import {useForm} from "react-hook-form";
 import * as XLSX from "xlsx";
+import AddUpdateModal from '../../components/AddUpdateModal/AddUpdateModal';
+import toast,{Toaster} from "react-hot-toast";
+import { parseErrorMessage } from '../../components/ParseErrorMessage';
 
 
 function Incomes() {
@@ -14,8 +16,9 @@ function Incomes() {
   const [searchQuery, setSearchQuery] = useState("");
   const [refreshIncomes, setRefreshIncomes] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
+  const [currentIncome, setCurrentIncome] = useState(null);
 
-  const {register, handleSubmit, formState:{errors}} = useForm();
 
   useEffect(() => {
     axios.get('/api/v1/categories/get-categories/income')
@@ -70,8 +73,12 @@ function Incomes() {
     .then((res)=>{
       console.log(res)
       setRefreshIncomes(prev=>!prev)
+      toast.success("income deleted successfully")
     })
-    .catch((err)=> console.log(err));
+    .catch((err)=> {
+      console.log(err)
+      toast.error(parseErrorMessage(err.response.data))
+    });
   }
 
 
@@ -81,9 +88,42 @@ function Incomes() {
         console.log(res);
         setRefreshIncomes(prev => !prev); // Trigger refresh
         setShowModal(false); // Close modal after successful submission
+        toast.success("income added successfully")
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err)
+        toast.error(parseErrorMessage(err.response.data))
+      });
   };
+
+  const handleEdit = (income) => {
+    const category = categories.find((category)=> category._id === income.category)
+    setCurrentIncome({
+      _id:income._id,
+      title:income.title,
+      description:income.description,
+      amount:income.amount,
+      date:income.date,
+      category:category?.name
+    })
+    setIsEditable(true);
+    setShowModal(true);
+  };
+
+  const editIncome = (data) => {
+    axios.patch(`/api/v1/incomes/update-income/${currentIncome._id}`,data)
+      .then((res) => {
+        console.log(res);
+        setRefreshIncomes(prev => !prev); // Trigger refresh
+        setShowModal(false); // Close modal after successful submission
+        setCurrentIncome(null);
+        toast.success("income updated successfully")
+      })
+      .catch((err) => {
+        console.error(err)
+        toast.error(parseErrorMessage(err.response.data))
+      });
+  }
 
   const exportIncomes = () => {
     const ws = XLSX.utils.json_to_sheet(incomes);
@@ -94,6 +134,10 @@ function Incomes() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1em" }}>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
       <div className='filtercont'>
         <h2>Categories</h2>
         {categories.length > 0 ? (
@@ -140,7 +184,8 @@ function Incomes() {
                   </p>
                 </div>
                 <div className="cont4">
-                  <button onClick={()=>handleDelete(income._id)}>Delete<MdDeleteOutline size={15}/></button>
+                  <button className='updtbtn' onClick={()=>handleEdit(income)}>Edit</button>
+                  <button className='delbtn' onClick={()=>handleDelete(income._id)}>Delete<MdDeleteOutline size={15}/></button>
                 </div>
               </div>
             ))
@@ -151,65 +196,13 @@ function Incomes() {
       </div>
 
       {/* Modal for Adding Income */}
-      {showModal && (
-        <div className="modal">
-          <form className='modal-content' onSubmit={handleSubmit(addIncome)}>
-            <div className="cont1">
-              <span onClick={() => setShowModal(false)}>&times;</span>
-            </div>
-            <h2>Add Income</h2>
-            <div className="incont">
-              <label>Title</label>
-              <input type="text" name="title" required {...register("title",{
-                required:"Please enter a title"
-              })}/>
-                {
-                  errors.title && (
-                    <span>{errors.title.message}</span>
-                  )
-                }
-            </div>
-            <div className="incont">
-              <label>Description</label>
-              <textarea name="description" {...register("description")}></textarea>
-            </div>
-            <div className="incont">
-              <label>Amount</label>
-              <input type="number" name="amount" required {...register("amount",{
-                required:"Please enter the amount"
-              })}/>
-              {
-                errors.amount && (
-                  <span>{errors.amount.message}</span>
-                )
-              }
-            </div>
-            <div className="incont">
-              <label>Date</label>
-              <input type="date" name="date" required {...register("date",{
-                required:"Please select a date"
-              })}/>
-              {
-                errors.date && (
-                  <span>{errors.date.message}</span>
-                )
-              }
-            </div>
-            <div className="incont">
-              <label>Category</label>
-              <input type="text" name="category" required {...register("category",{
-                required:"Please assign a category"
-              })}/>
-              {
-                errors.category && (
-                  <span>{errors.category.message}</span>
-                )
-              }
-            </div>
-            <button type="submit">Add Income</button>
-          </form>
-          </div>
-      )}
+      <AddUpdateModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        defaultValues={{ ...currentIncome, type: "Income" }}
+        isEditMode={isEditable}
+        onSubmit={isEditable?editIncome:addIncome}
+      />
     </div>
   );
 }

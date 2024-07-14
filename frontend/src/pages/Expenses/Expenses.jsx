@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./Expenses.css"
-import { MdDeleteOutline } from "react-icons/md";
 import * as XLSX from "xlsx";
 import AddUpdateModal from '../../components/AddUpdateModal/AddUpdateModal';
 import toast,{Toaster} from "react-hot-toast";
 import { parseErrorMessage } from '../../components/ParseErrorMessage';
+import { MdDeleteOutline } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 
 function Expenses() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [filteredExpenses, setFilteredExpenses] = useState([]);
@@ -24,8 +27,12 @@ function Expenses() {
       .then((res) => {
         console.log(res.data);
         setCategories(res.data.data);
+        setLoading(false)
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err)
+        setError(err.message)
+      });
 
     axios.get("/api/v1/expenses/get-expenses")
       .then((res) => {
@@ -131,14 +138,18 @@ function Expenses() {
     XLSX.writeFile(wb, "expenses.xlsx");
   }
 
+  if(loading) return <div className='loadercont'><div className='loader'></div></div>;
+  if(error) return <div>Error: {error}</div>;
+
   return (
     <div style={{display:"flex", flexDirection:"column", gap:"1em"}}>
       <Toaster
         position="top-center"
         reverseOrder={false}
       />
+      <h2>Expenses</h2>
       <div className='filtercont'>
-        <h2>Categories</h2>
+        <h3>Categories</h3>
         {categories.length > 0 ? (
           categories.map((category) => (
             <div className='filterbtn'
@@ -157,40 +168,47 @@ function Expenses() {
       </div>
       <div>
         <div className='expensescont'>
-          <h2>Expenses</h2>
-          <input
-          type="text"
-          placeholder="Search expenses..."
-          value={searchQuery}
-          onChange={handleSearch}
-          />
-          <button onClick={() => setShowModal(true)}>&#43; Add Expense</button>
-          <button onClick={exportExpense}>Export Expenses</button>
+          <div className="cont1">
+            <input
+              type="text"
+              placeholder="Search expenses..."
+              value={searchQuery}
+              onChange={handleSearch}
+            />
+            <button onClick={() => setShowModal(true)}>&#43; Add Expense</button>
+            <button onClick={exportExpense}>Export Expenses</button>
+          </div>
+          <div className="cont2">
           {filteredExpenses.length > 0 ? (
             filteredExpenses.map((expense) => (
               <div className='expense' key={expense._id}>
                 <div className='cont1'>
-                  <h3>{expense.title}</h3>
-                  <h3 style={{color:"red"}}>&#8377;{expense.amount}</h3>
+                  <div className='title'>
+                    <h3>{expense.title}</h3>
+                    <span>{new Date(expense.date).toLocaleDateString('en-GB')}</span>
+                  </div>
+                  <p style={{color:"red"}}>&#8377;{expense.amount}</p>
                 </div>
                 <div className='cont2'>
                   <p>{expense.description}</p>
                 </div>
                 <div className='cont3'>
-                  <p>Date: {new Date(expense.date).toLocaleDateString()}</p>
-                  <p>
-                  {expense.createdAt===expense.updatedAt?("added at: "+new Date(expense.createdAt).toLocaleString()):("updated at: "+new Date(expense.updatedAt).toLocaleString())}
-                  </p>
-                </div>
-                <div className="cont4">
-                  <button className='updtbtn' onClick={()=>handleEdit(expense)}>Edit</button>
-                  <button className='delbtn' onClick={()=>handleDelete(expense._id)}>Delete<MdDeleteOutline size={15}/></button>
-                </div>
+                  <div>
+                    <p>
+                    {expense.createdAt===expense.updatedAt?("Created at: "+new Date(expense.createdAt).toLocaleDateString('en-GB')):("Updated at: "+new Date(expense.updatedAt).toLocaleDateString('en-GB'))}
+                    </p>
+                  </div>
+                  <div className='btns'>
+                    <button className='updtbtn' onClick={()=>handleEdit(expense)}><MdEdit size={20}/></button>
+                    <button className='delbtn' onClick={()=>handleDelete(expense._id)}><MdDeleteOutline size={20}/></button>
+                  </div>
+                </div>  
               </div>
             ))
-          ) : (
-            "No Expenses"
+            ) : (
+            (<div>No Expenses</div>)
           )}
+          </div>
         </div>
       </div>
       {/* Modal for Adding Income */}

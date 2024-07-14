@@ -14,4 +14,27 @@ body {
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+  scrollbar-width: thin;
+}
+
+/* Scroll bar stylings */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color:transparent; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: black; 
+  border-radius: 8px;
+  border: 3px solid white;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  opacity: grey; 
 }

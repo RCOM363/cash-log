@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import { useForm } from 'react-hook-form';
-// import "./Modal.css";
+import "./AddUpdateModal.css";
 
 function AddUpdateModal({ isOpen, onClose, onSubmit, defaultValues, isEditMode }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
@@ -22,30 +22,30 @@ useEffect(() => {
           </div>
           <h2>{isEditMode ? 'Edit' : 'Add'} {defaultValues.type}</h2>
           <div className="incont">
-            <label>Title:</label>
+            <label>Title</label>
             <input type="text" name="title" required {...register("title")} />
             {errors.title && (
               <span>{errors.title.message}</span>
             )}
           </div>
           <div className="incont">
-            <label>Description:</label>
+            <label>Description</label>
             <textarea name="description" {...register("description")}></textarea>
-            <label>Amount:</label>
+            <label>Amount</label>
             <input type="number" name="amount" required {...register("amount")} />
             {errors.amount && (
               <span>{errors.amount.message}</span>
             )}
           </div>
           <div className="incont">
-            <label>Date:</label>
+            <label>Date</label>
             <input type="date" name="date" required {...register("date")} />
             {errors.date && (
               <span>{errors.date.message}</span>
             )}
           </div>
           <div className="incont">
-            <label>Category:</label>
+            <label>Category</label>
             <input type="text" name="category" required {...register("category")} />
             {errors.category && (
               <span>{errors.category.message}</span>

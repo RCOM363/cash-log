@@ -20,9 +20,31 @@
     padding: 1em;
     /* border-radius: 8px; */
     /* border: 1px solid black; */
+    height: 100vh;
+    overflow: auto;
 }
 
 /* common elements */
+
+/* loader */
+.loadercont{
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid;
+    border-color: #000 #0000;
+    animation: l1 1s infinite;
+  }
+  @keyframes l1 {to{transform: rotate(.5turn)}}
 
 /* filter buttons */
 .filtercont{
@@ -34,73 +56,10 @@
 
 .filtercont .filterbtn{
     padding: 0.3em;
+    font-size: 1rem;
     border-radius: 8px;
     border: 1px solid #DFDFDF;
     transition: all 0.2s ease;
 }
 
-/* modal */
-.modal{
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.4);
-    /* border: 1px solid black; */
-}
 
-.modal .modal-content{
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1em;
-    padding: 1em;
-    border-radius: 8px;
-    background-color: white;
-    /* border: 1px solid black; */
-    overflow: auto;
-}
-
-.modal .modal-content .cont1{
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.modal .modal-content .cont1 span{
-    font-size: 2rem;
-    cursor: pointer;
-}
-
-.modal .modal-content .incont{
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2em;
-}
-
-.modal .modal-content .incont input,textarea{
-    width:100%;
-    padding: 1em;
-    outline: none;
-    border-radius:8px;
-    border:3px solid #DFDFDF;
-}
-
-.modal .modal-content button{
-    width:80%;
-    padding: 1em;
-    outline: none;
-    border: none;
-    color: white;
-    margin-bottom: 1em;
-    background-color: black;
-    border-radius: 8px;
-}

@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./Incomes.css" 
-import { MdDeleteOutline } from "react-icons/md";
 import * as XLSX from "xlsx";
 import AddUpdateModal from '../../components/AddUpdateModal/AddUpdateModal';
 import toast,{Toaster} from "react-hot-toast";
 import { parseErrorMessage } from '../../components/ParseErrorMessage';
+import { MdDeleteOutline } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 
 
 function Incomes() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [incomes, setIncomes] = useState([]);
   const [filteredIncomes, setFilteredIncomes] = useState([]);
@@ -25,8 +28,12 @@ function Incomes() {
       .then((res) => {
         console.log(res.data);
         setCategories(res.data.data);
+        setLoading(false)
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err)
+        setError(err.message)
+      });
 
     axios.get("/api/v1/incomes/get-incomes")
       .then((res) => {
@@ -132,14 +139,18 @@ function Incomes() {
     XLSX.writeFile(wb, "incomes.xlsx");
   }
 
+  if(loading) return <div className='loadercont'><div className='loader'></div></div>;
+  if(error) return <div>Error: {error}</div>;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1em" }}>
       <Toaster
         position="top-center"
         reverseOrder={false}
       />
+      <h2>Incomes</h2>
       <div className='filtercont'>
-        <h2>Categories</h2>
+        <h3>Categories</h3>
         {categories.length > 0 ? (
           categories.map((category) => (
             <div className='filterbtn'
@@ -158,40 +169,47 @@ function Incomes() {
       </div>
       <div>
         <div className='incomescont'>
-          <h2>Incomes</h2>
-          <input
-          type="text"
-          placeholder="Search incomes..."
-          value={searchQuery}
-          onChange={handleSearch}
-          />
-          <button onClick={() => setShowModal(true)}>&#43; Add Income</button>
-          <button onClick={exportIncomes}>Export Incomes</button>
+          <div className="cont1">
+            <input
+            type="text"
+            placeholder="Search incomes..."
+            value={searchQuery}
+            onChange={handleSearch}
+            />
+            <button onClick={() => setShowModal(true)}>&#43; Add Income</button>
+            <button onClick={exportIncomes}>Export Incomes</button>
+          </div>
+          <div className="cont2">
           {filteredIncomes.length > 0 ? (
             filteredIncomes.map((income) => (
               <div className='income' key={income._id}>
                 <div className="cont1">
-                  <h3>{income.title}</h3>
-                  <h3 style={{color:"green"}}>&#8377;{income.amount}</h3>
+                  <div className='title'>
+                    <h3>{income.title}</h3>
+                    <span>{new Date(income.date).toLocaleDateString('en-GB')}</span>
+                  </div>
+                  <p style={{color:"green"}}>&#8377;{income.amount}</p>
                 </div>
                 <div className="cont2">
                   <p>{income.description}</p>
                 </div>
                 <div className="cont3">
-                  <p>Date: {new Date(income.date).toLocaleDateString()}</p>
-                  <p>
-                  {income.createdAt===income.updatedAt?("added at: "+new Date(income.createdAt).toLocaleString()):("updated at: "+new Date(income.updatedAt).toLocaleString())}
-                  </p>
-                </div>
-                <div className="cont4">
-                  <button className='updtbtn' onClick={()=>handleEdit(income)}>Edit</button>
-                  <button className='delbtn' onClick={()=>handleDelete(income._id)}>Delete<MdDeleteOutline size={15}/></button>
+                  <div>
+                    <p>
+                    {income.createdAt===income.updatedAt?("Created at: "+new Date(income.createdAt).toLocaleDateString('en-GB')):("Updated at: "+new Date(income.updatedAt).toLocaleDateString('en-GB'))}
+                    </p>
+                  </div>
+                  <div className="btns">
+                    <button className='updtbtn' onClick={()=>handleEdit(income)}><MdEdit size={20}/></button>
+                    <button className='delbtn' onClick={()=>handleDelete(income._id)}><MdDeleteOutline size={25}/></button>
+                  </div>
                 </div>
               </div>
             ))
           ) : (
-            "No Incomes"
+            <div>No Incomes </div>
           )}
+          </div>
         </div>
       </div>
 
@@ -208,3 +226,4 @@ function Incomes() {
 }
 
 export default Incomes;
+

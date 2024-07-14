@@ -15,8 +15,8 @@ function Signup() {
       console.log(data)
       axios.post("/api/v1/users/register",data)
       .then((res)=> {
-        console.log(res)
         toast.success("signed up successfully!");
+        console.log(res)
         navigate("/dashboard")
       })
       .catch((err)=>{
@@ -31,9 +31,9 @@ function Signup() {
   return (
     <>
     <Toaster
-  position="top-center"
-  reverseOrder={false}
-/>
+      position="top-center"
+      reverseOrder={false}
+    />
     <form 
     onSubmit={handleSubmit(signup)}
     className='signup'

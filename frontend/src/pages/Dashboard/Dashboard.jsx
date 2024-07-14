@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import LineChart from '../../components/LineChart/LineChart';
 import BarChart from '../../components/BarChart/BarChart';
-import PieChart from '../../components/PieChart/PieChart';
 import "./Dashboard.css"
 
 function Dashboard() {
@@ -24,9 +23,8 @@ function Dashboard() {
       });
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className='loadercont'><div className='loader'></div></div>;
   if (error) return <div>Error: {error}</div>;
-  if (!dashboardData) return null;
 
   const {fullName,email, totalExpenses, totalIncomes, expenseData, incomeData,expensesByCategory,
     incomesByCategory } = dashboardData;
@@ -53,18 +51,20 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <div className='cont2'>
-        <div className='graph1'>
-          <h3>Monthly Expenses & Incomes</h3>
-          <LineChart expenseData={expenseData} incomeData={incomeData}/>
-        </div>
-        <div className='graphs'>
-          <h3>Your Expenditure in different categories</h3>
-          <BarChart prop={expensesByCategory}/>
-          <h3>Your Earnings in different categories</h3>
-          <BarChart prop={incomesByCategory}/>
+      {expenseData.length>0 && incomeData.length>0 && (
+          <div className='cont2'>
+            <div className='graph1'>
+              <h3>Monthly Expenses & Incomes</h3>
+              <LineChart expenseData={expenseData} incomeData={incomeData}/>
+            </div>
+            <div className='graphs'>
+              <h3>Your Expenditure in different categories</h3>
+              <BarChart prop={expensesByCategory}/>
+              <h3>Your Earnings in different categories</h3>
+              <BarChart prop={incomesByCategory}/>
+            </div>
           </div>
-      </div>
+        )}
     </div>
   );
 }

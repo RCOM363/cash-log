@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import './Home.css'
+import { Link } from 'react-router-dom';
 
 function Home() {
   return (
@@ -10,7 +11,9 @@ function Home() {
     <h1><span>E</span>xpense Tracker</h1><br></br>
     <p>Take control of your finances and start saving today!</p>
     <p>Track your expenses, transform your future.</p>
-    <button>Get Started</button>
+    <button>
+    <Link to="Signup" className='linkb'>Login / SignUp</Link>
+    </button>
     </div>
     <div className='img'>
     <img src="/Budget.png" alt="Budget" />

@@ -11,9 +11,14 @@ function Home() {
     <h1><span>E</span>xpense Tracker</h1><br></br>
     <p>Take control of your finances and start saving today!</p>
     <p>Track your expenses, transform your future.</p>
+    <div className='button_container'>
     <button>
-    <Link to="Signup" className='linkb'>Login / SignUp</Link>
+    <Link to="Signup" className='linkb'>SignUp</Link>
     </button>
+    <button>
+    <Link to="signin" className='linkb'>SignIn</Link>
+    </button>
+    </div>
     </div>
     <div className='img'>
     <img src="/Budget.png" alt="Budget" />

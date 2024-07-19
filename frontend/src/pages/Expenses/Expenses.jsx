@@ -3,10 +3,13 @@ import axios from 'axios';
 import "./Expenses.css"
 import * as XLSX from "xlsx";
 import AddUpdateModal from '../../components/AddUpdateModal/AddUpdateModal';
+import ExportModal from '../../components/ExportModal/ExportModal';
 import toast,{Toaster} from "react-hot-toast";
 import { parseErrorMessage } from '../../components/ParseErrorMessage';
 import { MdDeleteOutline } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
+import { IoIosAdd } from "react-icons/io";
+import { TiExport } from "react-icons/ti";
 
 function Expenses() {
   const [loading, setLoading] = useState(true);
@@ -20,6 +23,7 @@ function Expenses() {
   const [showModal, setShowModal] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
   const [currentExpense, setCurrentExpense] = useState(null);
+  const [showExportModal, setShowExportModal] = useState(false);
 
 
   useEffect(() => {
@@ -120,9 +124,11 @@ function Expenses() {
     axios.patch(`/api/v1/expenses/update-expense/${currentExpense._id}`,data)
       .then((res) => {
         console.log(res);
+        setCurrentExpense({});
+        setIsEditable(prev => !prev);
         setRefreshExpenses(prev => !prev); // Trigger refresh
+        console.log(isEditable)
         setShowModal(false); // Close modal after successful submission
-        setCurrentExpense(null);
         toast.success("expense updated successfully")
       })
       .catch((err) => {
@@ -131,11 +137,21 @@ function Expenses() {
       });
   }
 
-  const exportExpense = () => {
-    const ws = XLSX.utils.json_to_sheet(expenses);
+  const exportExpenses = (data) => {
+    const dataToExport = data.map(({ title, description, amount, date }) => ({ title, description, amount, 
+      date:new Date(date).toLocaleDateString('en-GB') }));
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Expenses");
     XLSX.writeFile(wb, "expenses.xlsx");
+  }
+
+  const handleExport = (type) => {
+    const dataToExport = type === 'currentMonth'
+    ? expenses.filter(expense => new Date(expense.date).getMonth() === new Date().getMonth() && new Date(expense.date).getFullYear() === new Date().getFullYear())
+    : expenses;
+    exportExpenses(dataToExport);
+    setShowExportModal(false);
   }
 
   if(loading) return <div className='loadercont'><div className='loader'></div></div>;
@@ -175,8 +191,8 @@ function Expenses() {
               value={searchQuery}
               onChange={handleSearch}
             />
-            <button onClick={() => setShowModal(true)}>&#43; Add Expense</button>
-            <button onClick={exportExpense}>Export Expenses</button>
+            <button onClick={() => {setIsEditable(false);setCurrentExpense(null);setShowModal(true)}}><IoIosAdd size={20}/> Add Expense</button>
+            <button onClick={() => setShowExportModal(true)}><TiExport size={20}/>Export Expenses</button>
           </div>
           <div className="cont2">
           {filteredExpenses.length > 0 ? (
@@ -214,10 +230,20 @@ function Expenses() {
       {/* Modal for Adding Income */}
       <AddUpdateModal
         isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        defaultValues={{ ...currentExpense, type: "Expense" }}
+        onClose={() => {
+          setShowModal(false);
+          setCurrentExpense(null);
+        }}
+        defaultValues={isEditable ? { ...currentExpense } : {}}
+        type="Expense"
         isEditMode={isEditable}
         onSubmit={isEditable?editExpense:addExpense}
+      />
+      <ExportModal
+          isOpen={showExportModal}
+          onClose={() => {setShowExportModal(false)}}
+          onExport={handleExport}
+          type="expenses"
       />
     </div>
   );

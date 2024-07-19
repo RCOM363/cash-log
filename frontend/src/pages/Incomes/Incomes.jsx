@@ -3,10 +3,13 @@ import axios from 'axios';
 import "./Incomes.css" 
 import * as XLSX from "xlsx";
 import AddUpdateModal from '../../components/AddUpdateModal/AddUpdateModal';
+import ExportModal from '../../components/ExportModal/ExportModal';
 import toast,{Toaster} from "react-hot-toast";
 import { parseErrorMessage } from '../../components/ParseErrorMessage';
 import { MdDeleteOutline } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
+import { IoIosAdd } from "react-icons/io";
+import { TiExport } from "react-icons/ti";
 
 
 function Incomes() {
@@ -21,6 +24,8 @@ function Incomes() {
   const [showModal, setShowModal] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
   const [currentIncome, setCurrentIncome] = useState(null);
+  const [showExportModal, setShowExportModal] = useState(false);
+
 
 
   useEffect(() => {
@@ -132,11 +137,21 @@ function Incomes() {
       });
   }
 
-  const exportIncomes = () => {
-    const ws = XLSX.utils.json_to_sheet(incomes);
+  const exportIncomes = (data) => {
+    const dataToExport = data.map(({ title, description, amount, date }) => ({ title, description, amount, 
+      date:new Date(date).toLocaleDateString('en-GB') }));
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Incomes");
     XLSX.writeFile(wb, "incomes.xlsx");
+  }
+
+  const handleExport = (type) => {
+    const dataToExport = type === 'currentMonth'
+    ? incomes.filter(income => new Date(income.date).getMonth() === new Date().getMonth() && new Date(income.date).getFullYear() === new Date().getFullYear())
+    : incomes;
+    exportIncomes(dataToExport);
+    setShowExportModal(false);
   }
 
   if(loading) return <div className='loadercont'><div className='loader'></div></div>;
@@ -176,8 +191,8 @@ function Incomes() {
             value={searchQuery}
             onChange={handleSearch}
             />
-            <button onClick={() => setShowModal(true)}>&#43; Add Income</button>
-            <button onClick={exportIncomes}>Export Incomes</button>
+            <button onClick={() => setShowModal(true)}><IoIosAdd size={20}/> Add Income</button>
+            <button onClick={() => setShowExportModal(true)}><TiExport size={20}/>Export Incomes</button>
           </div>
           <div className="cont2">
           {filteredIncomes.length > 0 ? (
@@ -217,9 +232,16 @@ function Incomes() {
       <AddUpdateModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        defaultValues={{ ...currentIncome, type: "Income" }}
+        defaultValues={{ ...currentIncome }}
+        type="Income"
         isEditMode={isEditable}
         onSubmit={isEditable?editIncome:addIncome}
+      />
+      <ExportModal
+          isOpen={showExportModal}
+          onClose={() => setShowExportModal(false)}
+          onExport={handleExport}
+          type="incomes"
       />
     </div>
   );

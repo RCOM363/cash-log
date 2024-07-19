@@ -1,3 +1,4 @@
+
 .dashboard{
     display: flex;
     flex-direction: column;
@@ -25,10 +26,17 @@
 }
 
 .dashboard  .cont1 .stats .stat{
-    padding: 1em;
-    background-color: #EEEEEE;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 2em;
+    /* background-color: #EEEEEE; */
     border-radius: 8px;
-    /* border: 1px solid black;     */
+    border: 2px solid #DFDFDF;    
+}
+
+.dashboard  .cont1 .stats .stat h2{
+    font-size: 2rem;
 }
 
 .dashboard .cont2{
@@ -36,6 +44,18 @@
     flex-direction: column;
     gap: 1em;
 }
+
+.dashboard .cont2 .graphscont{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.dashboard .cont2 .graphscont .cont2{
+    display: grid;
+    grid-template-columns: repeat(2,50%);
+}
+
 
 .dashboard .cont2 .graph1{
     padding: 1em;

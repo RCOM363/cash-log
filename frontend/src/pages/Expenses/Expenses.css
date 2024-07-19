@@ -29,6 +29,10 @@
 }
 
 .expensescont button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
     padding: 1em;
     color: white;
     font-size: 0.8rem;
@@ -106,3 +110,37 @@
     background: #DFDFDF;
 }
 
+/* responsive */
+
+@media(max-width:1280px){
+    
+}
+@media(max-width:1024px){
+
+}
+@media(max-width:768px){
+
+}
+@media(max-width:640px){
+
+}
+@media(max-width:475px){
+
+    .expensescont .cont1{
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5em;
+    }
+    .expensescont .cont1 input[type="text"]{
+        width:98%;
+    }
+    
+    .expensescont .cont1 button{
+        width:48%;
+    }
+
+    .expensescont .cont2{
+        grid-template-columns: repeat(1,100%);
+    }
+}

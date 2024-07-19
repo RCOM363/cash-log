@@ -2,16 +2,18 @@ import {useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import "./AddUpdateModal.css";
 
-function AddUpdateModal({ isOpen, onClose, onSubmit, defaultValues, isEditMode }) {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
-    defaultValues: defaultValues || {}
-  });
+function AddUpdateModal({ isOpen, onClose, onSubmit, defaultValues,type, isEditMode }) {
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
 useEffect(() => {
     if (isOpen) {
-      reset(defaultValues || {});
+      if(isEditMode && defaultValues){
+        reset(defaultValues)
+      } else{
+        reset({});
+      }
     }
-  }, [isOpen, defaultValues, reset]);
+  }, [isOpen, defaultValues, isEditMode,reset]);
 
   return (
     isOpen && (
@@ -51,7 +53,7 @@ useEffect(() => {
               <span>{errors.category.message}</span>
             )}
           </div>
-          <button type="submit">{isEditMode ? 'Update' : 'Add'} {defaultValues.type}</button>
+          <button type="submit">{isEditMode ? 'Update' : 'Add'} {type}</button>
         </form>
       </div>
     )

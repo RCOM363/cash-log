@@ -200,40 +200,71 @@ const getDashboardData = asyncHandler(async (req, res) => {
   const today = new Date();
   const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  console.log(startOfMonth, endOfMonth);
+  const startOfYear = new Date(today.getFullYear(), 0, 1);
+  const endOfYear = new Date(today.getFullYear(), 11, 31);
+
+  // console.log(startOfMonth, endOfMonth);
+
+  // Fetch expenses and incomes for the current year
+  const expenses = await Expense.find({
+    user: userId,
+    date: { $gte: startOfYear, $lte: endOfYear },
+  }).select("amount date");
+
+  const incomes = await Income.find({
+    user: userId,
+    date: { $gte: startOfYear, $lte: endOfYear },
+  }).select("amount date");
+
+  // Aggregate data by month
+  const expensesByMonth = Array(12).fill(0);
+  const incomesByMonth = Array(12).fill(0);
+
+  expenses.forEach((expense) => {
+    const month = new Date(expense.date).getMonth();
+    expensesByMonth[month] += expense.amount;
+  });
+
+  incomes.forEach((income) => {
+    const month = new Date(income.date).getMonth();
+    incomesByMonth[month] += income.amount;
+  });
 
   // Fetch expenses and incomes for the current month
-  const expenses = await Expense.find({
+  const monthlyExpenses = await Expense.find({
     user: userId,
     date: { $gte: startOfMonth, $lte: endOfMonth },
   }).select("amount date");
 
-  const incomes = await Income.find({
+  const monthlyIncomes = await Income.find({
     user: userId,
     date: { $gte: startOfMonth, $lte: endOfMonth },
   }).select("amount date");
 
   // Calculate total expenses and incomes for the current month
-  const totalExpenses = expenses.reduce(
+  const monthlyTotalExpenses = monthlyExpenses.reduce(
     (acc, expense) => acc + expense.amount,
     0
   );
-  const totalIncomes = incomes.reduce((acc, income) => acc + income.amount, 0);
+  const monthlyTotalIncomes = monthlyIncomes.reduce(
+    (acc, income) => acc + income.amount,
+    0
+  );
 
   // Prepare data for the line graph
-  const expenseData = expenses.map((expense) => ({
+  const monthlyExpensesData = monthlyExpenses.map((expense) => ({
     x: new Date(expense.date),
     y: expense.amount,
   }));
 
-  const incomeData = incomes.map((income) => ({
+  const monthlyIncomesData = monthlyIncomes.map((income) => ({
     x: new Date(income.date),
     y: income.amount,
   }));
 
   const expensesByCategory = await Expense.aggregate([
     {
-      $match: { user: userId, date: { $gte: startOfMonth, $lte: endOfMonth } },
+      $match: { user: userId, date: { $gte: startOfYear, $lte: endOfYear } },
     },
     { $group: { _id: "$category", total: { $sum: "$amount" } } },
     {
@@ -250,7 +281,41 @@ const getDashboardData = asyncHandler(async (req, res) => {
 
   const incomesByCategory = await Income.aggregate([
     {
+      $match: { user: userId, date: { $gte: startOfYear, $lte: endOfYear } },
+    },
+    { $group: { _id: "$category", total: { $sum: "$amount" } } },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "_id",
+        foreignField: "_id",
+        as: "category",
+      },
+    },
+    { $unwind: "$category" },
+    { $project: { _id: 0, category: "$category.name", total: 1 } },
+  ]);
+
+  const monthlyExpensesByCategory = await Expense.aggregate([
+    {
       $match: { user: userId, date: { $gte: startOfMonth, $lte: endOfMonth } },
+    },
+    { $group: { _id: "$category", total: { $sum: "$amount" } } },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "_id",
+        foreignField: "_id",
+        as: "category",
+      },
+    },
+    { $unwind: "$category" },
+    { $project: { _id: 0, category: "$category.name", total: 1 } },
+  ]);
+
+  const monthlyIncomesByCategory = await Income.aggregate([
+    {
+      $match: { user: userId, date: { $gte: startOfYear, $lte: endOfYear } },
     },
     { $group: { _id: "$category", total: { $sum: "$amount" } } },
     {
@@ -268,12 +333,16 @@ const getDashboardData = asyncHandler(async (req, res) => {
   const data = {
     fullName: user.fullName,
     email: user.email,
-    totalExpenses,
-    totalIncomes,
-    expenseData,
-    incomeData,
+    monthlyTotalExpenses,
+    monthlyTotalIncomes,
+    monthlyExpensesData,
+    monthlyIncomesData,
+    expensesByMonth,
+    incomesByMonth,
     expensesByCategory,
     incomesByCategory,
+    monthlyExpensesByCategory,
+    monthlyIncomesByCategory,
   };
 
   return res

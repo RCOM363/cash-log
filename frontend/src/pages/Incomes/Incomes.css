@@ -30,6 +30,10 @@
 }
 
 .incomescont button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
     padding: 1em;
     color: white;
     font-size: 0.8rem;

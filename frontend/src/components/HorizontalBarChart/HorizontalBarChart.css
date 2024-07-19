@@ -1,0 +1,8 @@
+.horizontal-bar-chart{
+    display: flex;
+    flex-direction: column;
+}
+
+.horizontal-bar-chart canvas{
+    width:100%;
+}

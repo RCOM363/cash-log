@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import { NavLink } from 'react-router-dom';
 import "./Sidebar.css"
 import { MdOutlineSpaceDashboard } from "react-icons/md";
@@ -7,8 +7,12 @@ import { LuWallet } from "react-icons/lu";
 import { TbLogout } from "react-icons/tb";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
 
 function Sidebar() {
+
+  const [showMenu,setShowMenu] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,18 +27,43 @@ function Sidebar() {
         <div className='cont1'>
             <h3>&#8377;Expense Tracker</h3>
             <NavLink className='links' to="" end>
-                <MdOutlineSpaceDashboard size={20}/>
+                <MdOutlineSpaceDashboard />
                 <p>Dashboard</p>
             </NavLink>
             <NavLink className='links' to="expenses" >
-              <RiMoneyRupeeCircleLine size={20}/>
+              <RiMoneyRupeeCircleLine/>
               <p>Expenses</p>
             </NavLink>
             <NavLink className='links' to="incomes">
-              <LuWallet size={20}/>
+              <LuWallet/>
               <p>Incomes</p>
             </NavLink> 
             <button onClick={handleLogout}><TbLogout/>logout</button>
+        </div>
+        <div className="mobileview">
+          <div className='cont2'>
+            <h3>&#8377;Expense Tracker</h3>
+            <div className="menubtn" onClick={() => setShowMenu(prev => !prev)}>
+              {
+                showMenu?<IoIosArrowUp/>:<IoIosArrowDown/>
+              }
+            </div>
+          </div>
+          <div className="cont3" style={{display:showMenu?'flex':'none'}}>
+            <NavLink className='mobilelinks' to="" onClick={() => setShowMenu(prev => !prev)} end>
+              <MdOutlineSpaceDashboard/>
+              <p>Dashboard</p>
+            </NavLink>
+            <NavLink className='mobilelinks' to="expenses" onClick={() => setShowMenu(prev => !prev)} >
+              <RiMoneyRupeeCircleLine/>
+              <p>Expenses</p>
+            </NavLink>
+            <NavLink className='mobilelinks' to="incomes" onClick={() => setShowMenu(prev => !prev)}>
+              <LuWallet/>
+              <p>Incomes</p>
+            </NavLink> 
+            <button onClick={handleLogout}><TbLogout/>logout</button>
+          </div>
         </div>
       </div>
     </>

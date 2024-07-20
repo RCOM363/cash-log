@@ -1,6 +1,24 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import LineChart from '../../components/LineChart/LineChart';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  TimeScale
+} from 'chart.js';
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  TimeScale
+);
 import StackedBarChart from '../../components/StackedBarChart/StackedBarChart';
 import HorizontalBarChart from '../../components/HorizontalBarChart/HorizontalBarChart';
 
@@ -44,27 +62,31 @@ function Dashboard() {
             <h3>Total Expenses this month</h3>
             <h2>&#8377;{monthlyTotalExpenses}</h2>
           </div>
-          <div className='stat'>
-            <h3>Total Incomes this month</h3>
-            <h2>&#8377;{monthlyTotalIncomes}</h2>
-          </div>
-          <div className='stat'>
+           <div className='stat'>
+              <h3>Total Incomes this month</h3>
+              <h2>&#8377;{monthlyTotalIncomes}</h2>
+            </div>
+            <div className='stat'>
             <h3>Net Balance this month</h3>
             <h2>{monthlyTotalIncomes-monthlyTotalExpenses>0?"+":"-"}&#8377;{Math.abs(monthlyTotalIncomes-monthlyTotalExpenses)}</h2>
+            </div>
           </div>
         </div>
-      </div>
-      {monthlyExpensesData.length>0 && monthlyIncomesData.length>0 && (
           <div className='cont2'>
-            <div className='graphscont'>
-              <div className="cont1">
-                <StackedBarChart expenseData={monthlyExpensesData} incomesData={monthlyIncomesData} type="Daily"/>
-              </div>
-              <div className='cont2'>
-                <HorizontalBarChart data={monthlyExpensesByCategory} title={"Daily Incomes"}/>
-                <HorizontalBarChart data={monthlyIncomesByCategory} title={"Daily Incomes"}/>
-              </div>
-            </div>
+            {
+              monthlyExpensesData.length>0 && monthlyIncomesData.length>0 && (
+                <div className='graphscont'>
+                  <div className="cont1">
+                    <StackedBarChart expenseData={monthlyExpensesData} incomesData={monthlyIncomesData} 
+                    type={"Daily"}/>
+                  </div>
+                  <div className='cont2'>
+                    <HorizontalBarChart data={monthlyExpensesByCategory} title={"Daily Expenses"}/>
+                    <HorizontalBarChart data={monthlyIncomesByCategory} title={"Daily Incomes"}/>
+                  </div>
+                </div>
+              )
+            }
             <div className="graphscont">
               <div className="cont1">
                 <StackedBarChart expenseData={expensesByMonth} incomesData={incomesByMonth} type="Monthly"/>
@@ -73,9 +95,8 @@ function Dashboard() {
                 <HorizontalBarChart data={expensesByCategory} title={"Monthly Expenses"}/>
                 <HorizontalBarChart data={incomesByCategory} title={"Monthly Incomes"}/>
               </div>
-            </div>
-            </div>
-          )}
+          </div>
+        </div>
     </div>
   );
 }

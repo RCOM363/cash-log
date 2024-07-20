@@ -26,7 +26,9 @@ function Incomes() {
   const [currentIncome, setCurrentIncome] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
 
-
+  const sortIncomes = (incomes) => {
+    return incomes.sort((a, b) => new Date(b.date) - new Date(a.date));
+  };
 
   useEffect(() => {
     axios.get('/api/v1/categories/get-categories/income')
@@ -43,8 +45,9 @@ function Incomes() {
     axios.get("/api/v1/incomes/get-incomes")
       .then((res) => {
         console.log(res.data.data);
-        setIncomes(res.data.data);
-        setFilteredIncomes(res.data.data); // Initialize filtered incomes
+        const sortedIncomes = sortIncomes(res.data.data);
+        setIncomes(sortedIncomes);
+        setFilteredIncomes(sortedIncomes); // Initialize filtered incomes
       })
       .catch((err) => console.log(err));
   }, [refreshIncomes]);

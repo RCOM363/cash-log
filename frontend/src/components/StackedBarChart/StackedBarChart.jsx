@@ -1,5 +1,8 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
+import "chartjs-adapter-moment";
+import moment from 'moment';
+
 
 const StackedBarChart = ({ expenseData, incomesData, type }) => {
   let data;

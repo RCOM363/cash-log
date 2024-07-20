@@ -1,13 +1,9 @@
 .incomescont{
     display: flex;
     flex-wrap: wrap;
-    /* flex-direction: column; */
-    /* justify-content: center; */
     align-items: center;
     gap: 1em;
-    /* padding: 1em; */
     border-radius: 8px;
-    /* border: 1px solid black; */
 }
 
 .incomescont h2{
@@ -52,7 +48,6 @@
 }
 
 .incomescont .income{
-    flex-basis: 45%;
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -63,6 +58,7 @@
 
 .incomescont .income .cont1{
     display: flex;
+    flex-wrap: nowrap;
     justify-content: space-between;
     align-items: flex-start;
 }
@@ -109,4 +105,43 @@
 
 .incomescont .income .cont3 .btns button:hover{
     background: #DFDFDF;
+}
+
+/* responsive */
+
+@media(max-width:1280px){
+    
+}
+@media(max-width:1024px){
+    .incomescont .income .cont1 p {
+        font-size: 1.6rem;
+    }
+}
+@media(max-width:768px){
+    .incomescont .cont2{
+        grid-template-columns: repeat(2,50%);
+    }
+}
+@media(max-width:640px){
+    .incomescont .cont1{
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5em;
+    }
+    .incomescont .cont1 input[type="text"]{
+        width:98%;
+    }
+    
+    .incomescont .cont1 button{
+        width:48%;
+    }
+
+    .incomescont .cont2{
+        grid-template-columns: repeat(1,100%);
+    }
+}
+@media(max-width:475px){
+
+   
 }

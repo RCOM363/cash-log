@@ -93,3 +93,33 @@
     color: black;
     font-weight: 600;
 }
+
+/* responsive */
+
+@media (max-width:1280px){
+
+}
+
+@media (max-width:1024px){
+    .signin{
+        width:40%;
+    }
+}
+
+@media (max-width:768px){
+    .signin{
+        width:50%;
+    }
+}
+
+@media (max-width:640px){
+    .signin{
+        width:60%;
+    }
+}
+
+@media (max-width:475px){
+    .signin{
+        width:85%;
+    }
+}

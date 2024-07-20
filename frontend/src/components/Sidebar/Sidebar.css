@@ -31,6 +31,11 @@
     transition: all 0.3s ease;
 }
 
+.sidebar .cont1 .links svg{
+    font-size: 1.4rem;
+
+}
+
 .sidebar .cont1 .links p{
     font-size: 1rem;
     /* text-align: center; */
@@ -63,6 +68,14 @@
     opacity: 0.85;
 }
 
+/* mobile */
+
+.sidebar .mobileview{
+    display: none;
+    width:100%;
+}
+
+
 /* responsive */
 
 @media(max-width:1280px){
@@ -78,7 +91,75 @@
 
 }
 @media(max-width:475px){
+
+    .sidebar{
+        width: 100%;
+        padding: 0;
+    }
+
     .sidebar .cont1{
         display:none
     }
+
+    .sidebar .mobileview{
+      width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .sidebar .mobileview .cont2{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em;
+  }
+
+    .sidebar .mobileview .cont2 .menubtn{
+      font-size: 1.5rem;
+    }
+
+    .sidebar .mobileview .cont3{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2em;
+      padding: 1em;
+      background-color: white;
+      z-index: 999;
+    }
+
+    .sidebar .mobileview .cont3 .mobilelinks{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.2em;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: black;
+  }
+    
+    .sidebar .mobileview .cont3 .mobilelinks svg{
+      font-size: 1.5rem;
+  }
+
+    .sidebar .mobileview .cont3 button{
+      width:30%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5em;
+      padding: 0.5em;
+      outline: none;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      background-color: black;
+      border-radius:8px;
+    }
+
+  
 }

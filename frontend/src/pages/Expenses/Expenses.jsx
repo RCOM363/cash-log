@@ -25,6 +25,10 @@ function Expenses() {
   const [currentExpense, setCurrentExpense] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
 
+  const sortExpenses = (expenses) => {
+    return expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+  };
+
 
   useEffect(() => {
     axios.get('/api/v1/categories/get-categories/expense')
@@ -41,8 +45,9 @@ function Expenses() {
     axios.get("/api/v1/expenses/get-expenses")
       .then((res) => {
         console.log(res.data.data);
-        setExpenses(res.data.data);
-        setFilteredExpenses(res.data.data); // Initialize filtered expenses
+        const sortedExpenses = sortExpenses(res.data.data);
+        setExpenses(sortedExpenses);
+        setFilteredExpenses(sortedExpenses); // Initialize filtered expenses
       })
       .catch((err) => console.log(err));
   }, [refreshExpenses]);

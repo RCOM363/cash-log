@@ -6,7 +6,6 @@
     align-items: center;
     gap: 1em;
     padding: 1em;
-    /* border:1px solid black; */
 }
 
 .signin h3{
@@ -23,8 +22,7 @@
     flex-direction: column;
     align-items: center;
     gap: 1em;
-    /* padding: 1em; */
-    /* border:1px solid black; */
+
 }
 
 .signin .cont1 .incont{
@@ -33,8 +31,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.2em;
-    /* padding: 1em;
-    border:1px solid black; */
 }
 
 .signin .cont1 .incont input{
@@ -47,11 +43,10 @@
 
 .signin .cont1 .incont label{
     position: absolute;
-    top: 12px;
+    top: 14px;
     left: 16px;
     padding: 0 0.5em;
     pointer-events: none;
-    background-color: white;
     transition: all 0.2s ease;
 }
 
@@ -60,20 +55,27 @@
 .signin .cont1 .incont input:not(:placeholder-shown)+label
 {
     top:-10px;
+    background-color: white;
 }
 
 .signin .cont1 .incont input:focus{
     border-color: black;
-    background-color: white;
-}
-
-.signin .cont1.incont input:-webkit-autofill,
-.signin .cont1.incont input:-webkit-autofill:focus {
-  transition: background-color 0s 600000s, color 0s 600000s;
 }
 
 .signin .cont1 .incont span{
     color: red;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
 }
 
 .signin button{
@@ -85,7 +87,6 @@
     font-size: 1rem;
     background-color: black;
     border-radius:8px;
-    /* border:1px solid black; */
 }
 
 .signin a{

@@ -56,7 +56,7 @@
     border:3px solid #DFDFDF;
 }
 
-.modal .modal-content button{
+.modal .modal-content .btn{
     width:80%;
     padding: 1em;
     outline: none;
@@ -64,7 +64,12 @@
     color: white;
     margin-bottom: 3em;
     background-color: black;
+    cursor: pointer;
     border-radius: 8px;
+}
+
+.modal .modal-content .btn:hover,.btn:focus{
+    opacity: 0.85;
 }
 
 /* responsive */

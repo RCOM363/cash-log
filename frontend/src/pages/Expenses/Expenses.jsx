@@ -24,6 +24,8 @@ function Expenses() {
   const [isEditable, setIsEditable] = useState(false);
   const [currentExpense, setCurrentExpense] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
+  console.log(currentExpense)
+  console.log(isEditable)
 
   const sortExpenses = (expenses) => {
     return expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -151,10 +153,19 @@ function Expenses() {
     XLSX.writeFile(wb, "expenses.xlsx");
   }
 
-  const handleExport = (type) => {
-    const dataToExport = type === 'currentMonth'
-    ? expenses.filter(expense => new Date(expense.date).getMonth() === new Date().getMonth() && new Date(expense.date).getFullYear() === new Date().getFullYear())
-    : expenses;
+  const handleExport = (type,year) => {
+    let dataToExport = [];
+    if (type === 'currentMonth') {
+      dataToExport = expenses.filter(expense => new Date(expense.date).getMonth() === new Date().getMonth() && new Date(expense.date).getFullYear() === new Date().getFullYear());
+    } else if (type === 'particularYear' && year) {
+      dataToExport = expenses.filter(expense => new Date(expense.date).getFullYear() === parseInt(year));
+      if (dataToExport.length === 0) {
+        toast.error(`No expenses found for the year ${year}`);
+        return;
+      }
+    } else {
+      dataToExport = expenses;
+    }
     exportExpenses(dataToExport);
     setShowExportModal(false);
   }
@@ -196,7 +207,7 @@ function Expenses() {
               value={searchQuery}
               onChange={handleSearch}
             />
-            <button onClick={() => {setIsEditable(false);setCurrentExpense(null);setShowModal(true)}}><IoIosAdd size={20}/> Add Expense</button>
+            <button onClick={() => {setShowModal(true)}}><IoIosAdd size={20}/> Add Expense</button>
             <button onClick={() => setShowExportModal(true)}><TiExport size={20}/>Export Expenses</button>
           </div>
           <div className="cont2">
@@ -239,10 +250,10 @@ function Expenses() {
           setShowModal(false);
           setCurrentExpense(null);
         }}
-        defaultValues={isEditable ? { ...currentExpense } : {}}
+        values={isEditable ? currentExpense : {}}
         type="Expense"
         isEditMode={isEditable}
-        onSubmit={isEditable?editExpense:addExpense}
+        onSubmit={isEditable?(editExpense):(addExpense)}
       />
       <ExportModal
           isOpen={showExportModal}
@@ -253,8 +264,6 @@ function Expenses() {
     </div>
   );
 }
-
-
 
 
 export default Expenses;

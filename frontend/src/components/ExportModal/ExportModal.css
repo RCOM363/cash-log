@@ -1,12 +1,62 @@
 .options{
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    padding: 1em;
+    margin-bottom: 3em;
+}
+
+.options .optioncont1{
+    width: 80%;
+    display: flex;
     justify-content: center;
     align-items: center;
     padding: 1em;
+    border-radius: 8px;
+    border:2px solid #DFDFDFDF
 }
 
-.options button{
-    width: 30%;
+.options .optioncont1 button{
+    width: 100%;
+    padding: 1em;
+    outline: none;
+    border: none;
+    color: white;
+    background-color: black;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.options .optioncont2{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+    border-radius: 8px;
+    border:2px solid #DFDFDFDF
+}
+
+.options .optioncont2 input[type="text"]{
+    width: 100%;
+    outline: none;
+    padding: 1em;
+    margin: 1em;
+    border-radius: 8px;
+    border: 2px solid black;
+}
+
+.options .optioncont2 button{
+    width: 100%;
+    padding: 1em;
+    outline: none;
+    border: none;
+    color: white;
+    background-color: black;
+    cursor: pointer;
+    border-radius: 8px;
 }

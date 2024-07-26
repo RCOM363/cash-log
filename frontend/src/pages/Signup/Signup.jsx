@@ -29,17 +29,16 @@ function Signup() {
   const password = watch('password');
 
   return (
-    <>
-    <Toaster
-      position="top-center"
-      reverseOrder={false}
-    />
-    <form 
-    onSubmit={handleSubmit(signup)}
-    className='signup'
-    >
+    <div style={{maxHeight:'100vh',overflowY:"hidden"}}>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+      <form 
+      onSubmit={handleSubmit(signup)}
+      className='signup'
+      >
         <h3 >Signup</h3>
-        <p>Enter your information to create an account</p>
         <div className='cont1'>
           <div className="incont">
             <input name='fullName' placeholder='' type="text"  required {...register("fullName",{
@@ -90,7 +89,7 @@ function Signup() {
           <button type='submit'>Signup</button>
           <span>Already have an account?&nbsp;<Link to={"/signin"}>Signin</Link></span>
       </form>
-    </>
+    </div>
   )
 }
 

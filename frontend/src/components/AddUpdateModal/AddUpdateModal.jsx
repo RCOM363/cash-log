@@ -1,19 +1,35 @@
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import "./AddUpdateModal.css";
 
-function AddUpdateModal({ isOpen, onClose, onSubmit, defaultValues,type, isEditMode }) {
+function AddUpdateModal({ isOpen, onClose, onSubmit, values, type, isEditMode }) {
+  console.log(values);
+
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
-      if(isEditMode && defaultValues){
-        reset(defaultValues)
-      } else{
-        reset({});
+      if (isEditMode && values) {
+        reset({
+          _id: values._id,
+          title: values.title,
+          description: values.description,
+          amount: values.amount,
+          date: values.date,
+          category: values.name
+        });
+      } else {
+        reset({
+          _id: '',
+          title: '',
+          description: '',
+          amount: '',
+          date: '',
+          category: ''
+        });
       }
     }
-  }, [isOpen, defaultValues, isEditMode,reset]);
+  }, [isOpen, values, isEditMode, reset]);
 
   return (
     isOpen && (
@@ -22,7 +38,7 @@ useEffect(() => {
           <div className="cont1">
             <span onClick={onClose}>&times;</span>
           </div>
-          <h2>{isEditMode ? 'Edit' : 'Add'} {defaultValues.type}</h2>
+          <h2>{isEditMode ? 'Edit' : 'Add'} {type}</h2>
           <div className="incont">
             <label>Title</label>
             <input type="text" name="title" required {...register("title")} />
@@ -53,11 +69,11 @@ useEffect(() => {
               <span>{errors.category.message}</span>
             )}
           </div>
-          <button type="submit">{isEditMode ? 'Update' : 'Add'} {type}</button>
+          <button className='btn' type="submit">{isEditMode ? 'Update' : 'Add'} {type}</button>
         </form>
       </div>
     )
   );
 }
 
-export default  AddUpdateModal;
+export default AddUpdateModal;

@@ -46,8 +46,7 @@ function Dashboard() {
   if (loading) return <div className='loadercont'><div className='loader'></div></div>;
   if (error) return <div>Error: {error}</div>;
 
-  const {fullName,email, monthlyTotalExpenses, monthlyTotalIncomes, monthlyExpensesData, monthlyIncomesData,expensesByMonth, incomesByMonth, expensesByCategory, incomesByCategory,monthlyExpensesByCategory,
-    monthlyIncomesByCategory } = dashboardData;
+  const {fullName,email, monthlyTotalExpenses, monthlyTotalIncomes, monthlyExpensesData, monthlyIncomesData,monthlyExpensesByCategory, monthlyIncomesByCategory,yearlyTotalExpenses,yearlyTotalIncomes,expensesByMonth, incomesByMonth, expensesByCategory, incomesByCategory } = dashboardData;
 
 
   return (
@@ -57,20 +56,24 @@ function Dashboard() {
           <h1>Welcome, {fullName}</h1>
           <p>{email}</p>
         </div>
-        <div className='stats'>
+        {
+          monthlyExpensesData.length>0 && monthlyIncomesData.length>0 && (
+            <div className='stats'>
           <div className='stat'>
             <h3>Total Expenses this month</h3>
-            <h2>&#8377;{monthlyTotalExpenses}</h2>
+            <h2 style={{color:'#C8102E'}}>&#8377;{monthlyTotalExpenses}</h2>
           </div>
            <div className='stat'>
               <h3>Total Incomes this month</h3>
-              <h2>&#8377;{monthlyTotalIncomes}</h2>
+              <h2 style={{color:"#118C4F"}}>&#8377;{monthlyTotalIncomes}</h2>
             </div>
             <div className='stat'>
             <h3>Net Balance this month</h3>
-            <h2>{monthlyTotalIncomes-monthlyTotalExpenses>0?"+":"-"}&#8377;{Math.abs(monthlyTotalIncomes-monthlyTotalExpenses)}</h2>
+            <h2 style={{color:(monthlyTotalIncomes-monthlyTotalExpenses)>=0?'#118C4F':'#C8102E'}}>{monthlyTotalIncomes-monthlyTotalExpenses>=0?"+":"-"}&#8377;{Math.abs(monthlyTotalIncomes-monthlyTotalExpenses)}</h2>
             </div>
-          </div>
+        </div>
+          )
+        }
         </div>
           <div className='cont2'>
             {
@@ -87,14 +90,32 @@ function Dashboard() {
                 </div>
               )
             }
-            <div className="graphscont">
-              <div className="cont1">
-                <StackedBarChart expenseData={expensesByMonth} incomesData={incomesByMonth} type="Monthly"/>
-              </div>
-              <div className='cont2'>
-                <HorizontalBarChart data={expensesByCategory} title={"Monthly Expenses"}/>
-                <HorizontalBarChart data={incomesByCategory} title={"Monthly Incomes"}/>
-              </div>
+        </div>
+        <div className="cont1">
+          <div className='stats'>
+            <div className='stat'>
+              <h3>Total Expenses this year</h3>
+              <h2 style={{color:"#C8102E"}}>&#8377;{yearlyTotalExpenses}</h2>
+            </div>
+            <div className='stat'>
+              <h3>Total Incomes this year</h3>
+              <h2 style={{color:"#118C4F"}}>&#8377;{yearlyTotalIncomes}</h2>
+            </div>
+            <div className='stat'>
+              <h3>Net Balance this year</h3>
+              <h2 style={{color:(yearlyTotalExpenses-yearlyTotalIncomes)>=0?'#118C4F':'#C8102E'}}>{yearlyTotalExpenses-yearlyTotalIncomes>=0?"+":"-"}&#8377;{Math.abs(yearlyTotalExpenses-yearlyTotalIncomes)}</h2>
+            </div>
+          </div>
+        </div>
+        <div className="cont2">
+          <div className="graphscont">
+            <div className="cont1">
+              <StackedBarChart expenseData={expensesByMonth} incomesData={incomesByMonth} type="Monthly"/>
+            </div>
+            <div className='cont2'>
+              <HorizontalBarChart data={expensesByCategory} title={"Monthly Expenses"}/>
+              <HorizontalBarChart data={incomesByCategory} title={"Monthly Incomes"}/>
+            </div>
           </div>
         </div>
     </div>

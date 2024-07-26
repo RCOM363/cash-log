@@ -241,12 +241,33 @@ const getDashboardData = asyncHandler(async (req, res) => {
     date: { $gte: startOfMonth, $lte: endOfMonth },
   }).select("amount date");
 
+  // Fetch expenses and incomes for the current year
+  const yearlyExpenses = await Expense.find({
+    user: userId,
+    date: { $gte: startOfYear, $lte: endOfYear },
+  }).select("amount date");
+
+  const yearlyIncomes = await Income.find({
+    user: userId,
+    date: { $gte: startOfYear, $lte: endOfYear },
+  }).select("amount date");
+
   // Calculate total expenses and incomes for the current month
   const monthlyTotalExpenses = monthlyExpenses.reduce(
     (acc, expense) => acc + expense.amount,
     0
   );
   const monthlyTotalIncomes = monthlyIncomes.reduce(
+    (acc, income) => acc + income.amount,
+    0
+  );
+
+  // Calculate total expenses and incomes for the current year
+  const yearlyTotalExpenses = yearlyExpenses.reduce(
+    (acc, expense) => acc + expense.amount,
+    0
+  );
+  const yearlyTotalIncomes = yearlyIncomes.reduce(
     (acc, income) => acc + income.amount,
     0
   );
@@ -337,12 +358,14 @@ const getDashboardData = asyncHandler(async (req, res) => {
     monthlyTotalIncomes,
     monthlyExpensesData,
     monthlyIncomesData,
+    monthlyExpensesByCategory,
+    monthlyIncomesByCategory,
+    yearlyTotalExpenses,
+    yearlyTotalIncomes,
     expensesByMonth,
     incomesByMonth,
     expensesByCategory,
     incomesByCategory,
-    monthlyExpensesByCategory,
-    monthlyIncomesByCategory,
   };
 
   return res

@@ -36,8 +36,13 @@
     font-weight: 400;
     outline: none;
     border: none;
+    cursor: pointer;
     border-radius: 8px;
     background-color: black;
+}
+
+.expensescont button:hover,button:focus{
+    opacity: 0.85;
 }
 
 .expensescont .cont2{
@@ -143,5 +148,5 @@
     }
 }
 @media(max-width:475px){
-
+ 
 }

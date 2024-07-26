@@ -6,7 +6,6 @@
     align-items: center;
     gap: 1em;
     padding: 1em;
-    /* border:1px solid black; */
 }
 
 .signup h3{
@@ -23,8 +22,6 @@
     flex-direction: column;
     align-items: center;
     gap: 1em;
-    /* padding: 1em; */
-    /* border:1px solid black; */
 }
 
 .signup .cont1 .incont{
@@ -33,8 +30,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.2em;
-    /* padding: 1em;
-    border:1px solid black; */
 }
 
 .signup .cont1 .incont input{
@@ -60,16 +55,24 @@
 .signup .cont1 .incont input:not(:placeholder-shown)+label
 {
     top:-10px;
+    background-color: white;
+
 }
 
 .signup .cont1 .incont input:focus{
     border-color: black;
-    background-color: white;
 }
 
-.signup .cont1.incont input:-webkit-autofill,
-.signup .cont1.incont input:-webkit-autofill:focus {
-  transition: background-color 0s 600000s, color 0s 600000s;
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
 }
 
 .signup .cont1 .incont span{
@@ -86,7 +89,6 @@
     font-size: 1rem;
     background-color: black;
     border-radius:8px;
-    /* border:1px solid black; */
 }
 
 .signup a{

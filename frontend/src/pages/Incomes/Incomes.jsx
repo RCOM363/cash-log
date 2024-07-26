@@ -149,10 +149,19 @@ function Incomes() {
     XLSX.writeFile(wb, "incomes.xlsx");
   }
 
-  const handleExport = (type) => {
-    const dataToExport = type === 'currentMonth'
-    ? incomes.filter(income => new Date(income.date).getMonth() === new Date().getMonth() && new Date(income.date).getFullYear() === new Date().getFullYear())
-    : incomes;
+  const handleExport = (type,year) => {
+    let dataToExport = [];
+    if (type === 'currentMonth') {
+      dataToExport = incomes.filter(expense => new Date(expense.date).getMonth() === new Date().getMonth() && new Date(expense.date).getFullYear() === new Date().getFullYear());
+    } else if (type === 'particularYear' && year) {
+      dataToExport = incomes.filter(expense => new Date(expense.date).getFullYear() === parseInt(year));
+      if (dataToExport.length === 0) {
+        toast.error(`No expenses found for the year ${year}`);
+        return;
+      }
+    } else {
+      dataToExport = incomes;
+    }
     exportIncomes(dataToExport);
     setShowExportModal(false);
   }
@@ -234,8 +243,11 @@ function Incomes() {
       {/* Modal for Adding Income */}
       <AddUpdateModal
         isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        defaultValues={{ ...currentIncome }}
+        onClose={() => {
+          setShowModal(false);
+          setCurrentIncome(null)
+        }}
+        values={isEditable ? currentIncome : {}}
         type="Income"
         isEditMode={isEditable}
         onSubmit={isEditable?editIncome:addIncome}

@@ -18,7 +18,9 @@
 }
 
 .dashboard .cont1 .stats{
+    width: 100%;
     display: flex;
+    justify-content: center;
     gap: 1em;
     /* padding: 1em; */
     border-radius: 8px;
@@ -26,6 +28,7 @@
 }
 
 .dashboard  .cont1 .stats .stat{
+    flex-basis: 33%;
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -89,7 +92,7 @@
     }
 
     .dashboard .cont1 .stats .stat{
-        width: 100%;
+        flex-basis: 100%;
         justify-content: center;
         gap: 0;
         padding: 1em;

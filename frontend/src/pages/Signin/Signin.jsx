@@ -28,7 +28,7 @@ function Signin() {
 
   
   return (
-    <>
+    <div style={{maxHeight:'100vh',overflowY:"hidden"}}>
       <Toaster
       position="top-center"
       reverseOrder={false}
@@ -37,7 +37,6 @@ function Signin() {
       className='signin' 
       onSubmit={handleSubmit(signin)} >
         <h3>Signin</h3>
-        <p>Enter your information to signin</p>
         <div className='cont1'>
           <div className='incont'>
             <input name="email" placeholder='' type="text" required {...register("email",{
@@ -66,7 +65,7 @@ function Signin() {
         <button type='submit'>Login</button>
         <span>Don&apos;t have an account?&nbsp;<Link to={"/signup"}>Signup</Link></span>
       </form>
-    </>
+    </div>
   )
 }
 

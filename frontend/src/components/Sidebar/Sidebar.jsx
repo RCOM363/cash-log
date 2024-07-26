@@ -25,7 +25,7 @@ function Sidebar() {
     <>
       <div className='sidebar'>
         <div className='cont1'>
-            <h3>&#8377;Expense Tracker</h3>
+            <h3 onClick={()=> navigate("/")} style={{cursor:"pointer"}}>&#8377;Expense Tracker</h3>
             <NavLink className='links' to="" end>
                 <MdOutlineSpaceDashboard />
                 <p>Dashboard</p>
@@ -42,7 +42,7 @@ function Sidebar() {
         </div>
         <div className="mobileview">
           <div className='cont2'>
-            <h3>&#8377;Expense Tracker</h3>
+            <h3 onClick={()=> navigate("/")}>&#8377;Expense Tracker</h3>
             <div className="menubtn" onClick={() => setShowMenu(prev => !prev)}>
               {
                 showMenu?<IoIosArrowUp/>:<IoIosArrowDown/>

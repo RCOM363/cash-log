@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/v1": {
-        target: "http://localhost:6000",
+        target: "https://expense-tracker-9ifm.onrender.com",
         changeOrigin: true,
         secure: false,
       },

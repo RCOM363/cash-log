@@ -103,7 +103,7 @@ function Dashboard() {
             </div>
             <div className='stat'>
               <h3>Net Balance this year</h3>
-              <h2 style={{color:(yearlyTotalExpenses-yearlyTotalIncomes)>=0?'#118C4F':'#C8102E'}}>{yearlyTotalExpenses-yearlyTotalIncomes>=0?"+":"-"}&#8377;{Math.abs(yearlyTotalExpenses-yearlyTotalIncomes)}</h2>
+              <h2 style={{color:(yearlyTotalIncomes-yearlyTotalExpenses)>=0?'#118C4F':'#C8102E'}}>{yearlyTotalIncomes-yearlyTotalExpenses>=0?"+":"-"}&#8377;{Math.abs(yearlyTotalIncomes-yearlyTotalExpenses)}</h2>
             </div>
           </div>
         </div>

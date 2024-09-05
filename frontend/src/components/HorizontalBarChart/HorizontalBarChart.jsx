@@ -1,6 +1,8 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import "./HorizontalBarChart.css"
+import moment from 'moment';
+
 
 function HorizontalBarChart({ data,title }) {
 

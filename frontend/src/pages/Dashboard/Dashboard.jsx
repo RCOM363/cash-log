@@ -57,7 +57,7 @@ function Dashboard() {
           <p>{email}</p>
         </div>
         {
-          monthlyExpensesData.length>0 && monthlyIncomesData.length>0 && (
+          (monthlyExpensesData.length>0 || monthlyIncomesData.length>0) && (
             <div className='stats'>
           <div className='stat'>
             <h3>Total Expenses this month</h3>
@@ -77,15 +77,15 @@ function Dashboard() {
         </div>
           <div className='cont2'>
             {
-              monthlyExpensesData.length>0 && monthlyIncomesData.length>0 && (
+              (monthlyExpensesData.length>0 || monthlyIncomesData.length>0) && (
                 <div className='graphscont'>
                   <div className="cont1">
                     <StackedBarChart expenseData={monthlyExpensesData} incomesData={monthlyIncomesData} 
                     type={"Daily"}/>
                   </div>
                   <div className='cont2'>
-                    <HorizontalBarChart data={monthlyExpensesByCategory} title={"Daily Expenses"}/>
-                    <HorizontalBarChart data={monthlyIncomesByCategory} title={"Daily Incomes"}/>
+                    <HorizontalBarChart data={monthlyExpensesByCategory} title={`${new Date().toLocaleString('default', { month: 'long' })} Expenses`}/>
+                    <HorizontalBarChart data={monthlyIncomesByCategory} title={`${new Date().toLocaleString('default', { month: 'long' })} Incomes`}/>
                   </div>
                 </div>
               )
@@ -113,8 +113,8 @@ function Dashboard() {
               <StackedBarChart expenseData={expensesByMonth} incomesData={incomesByMonth} type="Monthly"/>
             </div>
             <div className='cont2'>
-              <HorizontalBarChart data={expensesByCategory} title={"Monthly Expenses"}/>
-              <HorizontalBarChart data={incomesByCategory} title={"Monthly Incomes"}/>
+              <HorizontalBarChart data={expensesByCategory} title={`${new Date().getFullYear()} Expenses`}/>
+              <HorizontalBarChart data={incomesByCategory} title={`${new Date().getFullYear()} Incomes`}/>
             </div>
           </div>
         </div>

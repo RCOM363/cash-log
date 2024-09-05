@@ -27,7 +27,7 @@ function Signup() {
 
   // Watch password for validation of confirmPassword
   const password = watch('password');
-
+-
   return (
     <div style={{maxHeight:'100vh',overflowY:"hidden"}}>
       <Toaster

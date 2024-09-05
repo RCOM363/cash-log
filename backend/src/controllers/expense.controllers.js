@@ -104,6 +104,15 @@ const deleteExpense = asyncHandler(async (req, res) => {
 const updateExpense = asyncHandler(async (req, res) => {
   const { title, description, amount, date, category } = req.body;
 
+  // Find the original expense before updating
+  const originalExpense = await Expense.findById(req.params?.id);
+
+  if (!originalExpense) {
+    throw new ApiError(404, "Expense not found!");
+  }
+
+  const originalCategoryId = originalExpense.category;
+
   const existingCategory = await Category.findOne({
     name: category.toLowerCase(),
     user: req.user._id,
@@ -145,6 +154,16 @@ const updateExpense = asyncHandler(async (req, res) => {
 
   if (!updatedExpense) {
     throw new ApiError(404, "Expense not found!");
+  }
+
+  // Check if the original category has any other expenses
+  const expenseInOriginalCategory = await Expense.find({
+    category: originalCategoryId,
+    user: req.user._id,
+  });
+
+  if (expenseInOriginalCategory.length === 0) {
+    await Category.findByIdAndDelete(originalCategoryId);
   }
 
   console.log("Expense updated successfully");

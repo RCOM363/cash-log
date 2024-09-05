@@ -14,7 +14,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
-
+    console.log(accessToken, refreshToken);
     return { accessToken, refreshToken };
   } catch (error) {
     throw new ApiError(
@@ -52,9 +52,22 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "something went wrong while registering a user");
   }
 
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
+
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
   console.log("User registered successfully");
   return res
     .status(201)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
 
@@ -350,6 +363,8 @@ const getDashboardData = asyncHandler(async (req, res) => {
     { $unwind: "$category" },
     { $project: { _id: 0, category: "$category.name", total: 1 } },
   ]);
+
+  console.log(yearlyTotalExpenses, yearlyTotalIncomes);
 
   const data = {
     fullName: user.fullName,

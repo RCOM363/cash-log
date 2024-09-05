@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 function Home() {
   return (
-    <div style={{overflowY:"hidden",maxHeight:'100vh'}}>
+    <div style={{maxHeight:'100vh',overflowY:"hidden"}}>
       <div className="home-container">
         <div className="content">
           <h1><span>E</span>xpense Tracker</h1><br></br>

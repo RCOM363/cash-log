@@ -49,6 +49,7 @@
 /* filter buttons */
 .filtercont{
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 1em;
     /* border: 1px solid black; */

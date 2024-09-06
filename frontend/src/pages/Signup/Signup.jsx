@@ -1,33 +1,31 @@
-import axios from 'axios'
 import "./Signup.css";
 import { Link,useNavigate } from 'react-router-dom';
 import {useForm} from "react-hook-form"
-import toast,{Toaster} from 'react-hot-toast';
-import { parseErrorMessage } from '../../components/ParseErrorMessage';
+import {Toaster} from 'react-hot-toast';
+import {useDispatch} from "react-redux"
+import { registerUser } from '../../store/slices/authSlice';
 
 function Signup() {
   
   const {register,handleSubmit,formState:{errors},watch} = useForm();
   
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const signup = (data) => {
+  const signup = async (data) => {
       console.log(data)
-      axios.post("/api/v1/users/register",data)
-      .then((res)=> {
-        toast.success("signed up successfully!");
-        console.log(res)
+      try {
+        const response = await dispatch(registerUser(data)).unwrap();
+        console.log(response)  
         navigate("/dashboard")
-      })
-      .catch((err)=>{
-        console.log(err)
-        toast.error(parseErrorMessage(err.response.data))
-      })
+      } catch (error) {
+        console.error(error)
+      }
+      
     }    
 
   // Watch password for validation of confirmPassword
   const password = watch('password');
--
   return (
     <div style={{maxHeight:'100vh',overflowY:"hidden"}}>
       <Toaster

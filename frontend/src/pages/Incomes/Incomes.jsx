@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import "./Incomes.css" 
 import * as XLSX from "xlsx";
 import AddUpdateModal from '../../components/AddUpdateModal/AddUpdateModal';
@@ -10,13 +9,16 @@ import { MdDeleteOutline } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { IoIosAdd } from "react-icons/io";
 import { TiExport } from "react-icons/ti";
+import { useDispatch, useSelector } from 'react-redux';
+import { getCategories } from '../../store/slices/categorySlice';
+import { getIncomes, addIncome, deleteIncome, updateIncome } from '../../store/slices/incomeSlice';
 
 
 function Incomes() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [categories, setCategories] = useState([]);
-  const [incomes, setIncomes] = useState([]);
+  const dispatch = useDispatch()
+  const {categories} = useSelector((state) => state.category)
+  const {loading, incomes} = useSelector((state) => state.income)
+
   const [filteredIncomes, setFilteredIncomes] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,31 +29,25 @@ function Incomes() {
   const [showExportModal, setShowExportModal] = useState(false);
 
   const sortIncomes = (incomes) => {
-    return incomes.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // creating a shallow copy of the array before sorting, which prevents mutation of the original array
+    return [...incomes].sort((a, b) => new Date(b.date) - new Date(a.date));
   };
 
   useEffect(() => {
-    axios.get('/api/v1/categories/get-categories/income')
-      .then((res) => {
-        console.log(res.data);
-        setCategories(res.data.data);
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-        setError(err.message)
-      });
+    dispatch(getCategories("income"))
+    dispatch(getIncomes())
+  }, [dispatch,refreshIncomes]);
 
-    axios.get("/api/v1/incomes/get-incomes")
-      .then((res) => {
-        console.log(res.data.data);
-        const sortedIncomes = sortIncomes(res.data.data);
-        setIncomes(sortedIncomes);
-        setFilteredIncomes(sortedIncomes); // Initialize filtered incomes
-      })
-      .catch((err) => console.log(err));
-  }, [refreshIncomes]);
+  useEffect(() => {
+    // Sort and set the filtered expenses only when `incomes` changes
+    if (incomes.length > 0) {
+      const sortedIncomes = sortIncomes(incomes);
+      setFilteredIncomes(sortedIncomes);
+    }
+  }, [incomes, refreshIncomes]);
 
+
+  console.log(incomes)
   const handleCategoryClick = (categoryId) => {
     if (selectedCategory === categoryId) {
       // If the category is already selected, remove the filter
@@ -83,36 +79,35 @@ function Incomes() {
     setFilteredIncomes(filtered);
   };
 
-  const handleDelete = (id) => {
-    axios.delete(`/api/v1/incomes/delete-income/${id}`)
-    .then((res)=>{
-      console.log(res)
-      setRefreshIncomes(prev=>!prev)
-      toast.success("income deleted successfully")
-    })
-    .catch((err)=> {
-      console.log(err)
-      toast.error(parseErrorMessage(err.response.data))
-    });
+  const handleDelete = async (id) => {
+    try {
+      const response = await dispatch(deleteIncome(id))
+      console.log(response)
+      setRefreshIncomes(prev => !prev); // Trigger refresh
+      toast.success("incomes deleted successfully")
+    } catch (error) {
+      console.log(error)
+      toast.error(parseErrorMessage(error))
+    }
   }
 
 
-  const addIncome = (data) => {
-    axios.post('/api/v1/incomes/add-income', data)
-      .then((res) => {
-        console.log(res);
-        setRefreshIncomes(prev => !prev); // Trigger refresh
-        setShowModal(false); // Close modal after successful submission
-        toast.success("income added successfully")
-      })
-      .catch((err) => {
-        console.error(err)
-        toast.error(parseErrorMessage(err.response.data))
-      });
+  const addIncomes = async (data) => {
+    try {
+      const response = await dispatch(addIncome(data))
+      console.log(response)
+      setRefreshIncomes(prev => !prev); // Trigger refresh
+      setShowModal(false); // Close modal after successful submission
+      toast.success("income added successfully")
+    } catch (error) {
+      console.log(error)
+      toast.error(parseErrorMessage(error))
+    }
   };
 
   const handleEdit = (income) => {
     const category = categories.find((category)=> category._id === income.category)
+    console.log(category?.name)
     setCurrentIncome({
       _id:income._id,
       title:income.title,
@@ -125,19 +120,23 @@ function Incomes() {
     setShowModal(true);
   };
 
-  const editIncome = (data) => {
-    axios.patch(`/api/v1/incomes/update-income/${currentIncome._id}`,data)
-      .then((res) => {
-        console.log(res);
-        setRefreshIncomes(prev => !prev); // Trigger refresh
-        setShowModal(false); // Close modal after successful submission
-        setCurrentIncome(null);
-        toast.success("income updated successfully")
-      })
-      .catch((err) => {
-        console.error(err)
-        toast.error(parseErrorMessage(err.response.data))
-      });
+  const editIncome = async (data) => {
+    try {
+      const income = {
+        _id:currentIncome._id,
+        data:data
+      }
+      const response = await dispatch(updateIncome(income))
+      console.log(response)
+      setRefreshIncomes(prev=>!prev)
+      console.log(isEditable)
+      setShowModal(false); // Close modal after successful submission
+      setCurrentIncome(null);
+      toast.success("income updated successfully")
+    } catch (error) {
+      console.log(error)
+      toast.error(parseErrorMessage(error))
+    }
   }
 
   const exportIncomes = (data) => {
@@ -166,8 +165,7 @@ function Incomes() {
     setShowExportModal(false);
   }
 
-  if(loading) return <div className='loadercont'><div className='loader'></div></div>;
-  if(error) return <div>Error: {error}</div>;
+  if(loading || !incomes) return <div className='loadercont'><div className='loader'></div></div>;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1em" }}>
@@ -250,7 +248,7 @@ function Incomes() {
         values={isEditable ? currentIncome : {}}
         type="Income"
         isEditMode={isEditable}
-        onSubmit={isEditable?editIncome:addIncome}
+        onSubmit={isEditable?editIncome:addIncomes}
       />
       <ExportModal
           isOpen={showExportModal}

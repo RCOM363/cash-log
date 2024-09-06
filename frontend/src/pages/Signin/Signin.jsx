@@ -1,29 +1,25 @@
-import {useState} from 'react'
-import axios from 'axios';
 import { useNavigate,Link } from 'react-router-dom';
 import "./Signin.css"
 import { useForm } from 'react-hook-form';
-import toast,{Toaster} from "react-hot-toast";
-import { parseErrorMessage } from '../../components/ParseErrorMessage';
+import {Toaster} from "react-hot-toast";
+import { useDispatch  } from 'react-redux';
+import { userLogin } from '../../store/slices/authSlice';
 
 function Signin() {
 
   const {register,handleSubmit,formState:{errors}} = useForm();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const signin = (data) => {
-    console.log(data)
-    axios.post("/api/v1/users/login",data)
-      .then((res)=> {
-        console.log(res)
-        toast.success("signed in successfully!");
-        navigate("/dashboard")
-      })
-      .catch((err)=> {
-        console.log(err)
-        toast.error(parseErrorMessage(err.response.data))
-      })
+  const signin = async (data) => {
+    try {
+      const response = await dispatch(userLogin(data)).unwrap();
+      console.log(response)
+      navigate("/dashboard")
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   

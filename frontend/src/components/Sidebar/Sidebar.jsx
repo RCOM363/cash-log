@@ -5,20 +5,26 @@ import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { RiMoneyRupeeCircleLine } from "react-icons/ri";
 import { LuWallet } from "react-icons/lu";
 import { TbLogout } from "react-icons/tb";
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
+import { useDispatch } from 'react-redux';
+import { userLogout } from '../../store/slices/authSlice';
 
 function Sidebar() {
 
   const [showMenu,setShowMenu] = useState(false);
+  const dispatch = useDispatch()
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    axios.post("/api/v1/users/logout")
-    .then(()=> navigate("/signin"));
+    try {
+      dispatch(userLogout()).unwrap();
+      navigate("/signin")
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

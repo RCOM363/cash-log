@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import "./Expenses.css"
 import * as XLSX from "xlsx";
 import AddUpdateModal from '../../components/AddUpdateModal/AddUpdateModal';
@@ -10,12 +9,15 @@ import { MdDeleteOutline } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { IoIosAdd } from "react-icons/io";
 import { TiExport } from "react-icons/ti";
+import { useDispatch, useSelector } from 'react-redux';
+import { getCategories } from '../../store/slices/categorySlice';
+import { getExpenses, addExpense, deleteExpense, updateExpense } from '../../store/slices/expenseSlice';
 
 function Expenses() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [categories, setCategories] = useState([]);
-  const [expenses, setExpenses] = useState([]);
+  const dispatch = useDispatch()
+  const {categories} = useSelector((state) => state.category)
+  const {loading, expenses} = useSelector((state) => state.expense)
+
   const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,36 +26,27 @@ function Expenses() {
   const [isEditable, setIsEditable] = useState(false);
   const [currentExpense, setCurrentExpense] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
-  console.log(currentExpense)
-  console.log(isEditable)
 
   const sortExpenses = (expenses) => {
-    return expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // creating a shallow copy of the array before sorting, which prevents mutation of the original array
+    return [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
   };
 
 
   useEffect(() => {
-    axios.get('/api/v1/categories/get-categories/expense')
-      .then((res) => {
-        console.log(res.data);
-        setCategories(res.data.data);
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-        setError(err.message)
-      });
+    dispatch(getCategories("expense"))
+    dispatch(getExpenses())
+  }, [dispatch,refreshExpenses]);
 
-    axios.get("/api/v1/expenses/get-expenses")
-      .then((res) => {
-        console.log(res.data.data);
-        const sortedExpenses = sortExpenses(res.data.data);
-        setExpenses(sortedExpenses);
-        setFilteredExpenses(sortedExpenses); // Initialize filtered expenses
-      })
-      .catch((err) => console.log(err));
-  }, [refreshExpenses]);
+  useEffect(() => {
+    // Sort and set the filtered expenses only when `expenses` changes
+    if (expenses.length > 0) {
+      const sortedExpenses = sortExpenses(expenses);
+      setFilteredExpenses(sortedExpenses);
+    }
+  }, [expenses, refreshExpenses]);
 
+  console.log(expenses)
   const handleCategoryClick = (categoryId) => {
     if (selectedCategory === categoryId) {
       // If the category is already selected, remove the filter
@@ -84,32 +77,30 @@ function Expenses() {
     setFilteredExpenses(filtered);
   };
 
-  const handleDelete = (id) => {
-    axios.delete(`/api/v1/expenses/delete-expense/${id}`)
-    .then((res)=>{
-      console.log(res)
-      setRefreshExpenses(prev=>!prev)
+  const handleDelete = async (id) => {
+    try {
+      const response = await dispatch(deleteExpense(id))
+      console.log(response)
+      setRefreshExpenses(prev => !prev); // Trigger refresh
       toast.success("expense deleted successfully")
-    })
-    .catch((err)=> {
-      console.log(err)
-      toast.error(parseErrorMessage(err.response.data))
-    });
+    } catch (error) {
+      console.log(error)
+      toast.error(parseErrorMessage(error))
+    }
   }
 
 
-  const addExpense = (data) => {
-    axios.post('/api/v1/expenses/add-expense', data)
-      .then((res) => {
-        console.log(res);
-        setRefreshExpenses(prev => !prev); // Trigger refresh
-        setShowModal(false); // Close modal after successful submission
-        toast.success("expense added successfully");
-      })
-      .catch((err) => {
-        console.error(err)
-        toast.error(parseErrorMessage(err.response.data))
-      });
+  const addExpenses = async (data) => {
+    try {
+      const response = await dispatch(addExpense(data))
+      console.log(response)
+      setRefreshExpenses(prev => !prev); // Trigger refresh
+      setShowModal(false); // Close modal after successful submission
+      toast.success("expense added successfully")
+    } catch (error) {
+      console.log(error)
+      toast.error(parseErrorMessage(error))
+    }
   };
 
   const handleEdit = (expense) => {
@@ -127,21 +118,23 @@ function Expenses() {
     setShowModal(true);
   };
 
-  const editExpense = (data) => {
-    axios.patch(`/api/v1/expenses/update-expense/${currentExpense._id}`,data)
-      .then((res) => {
-        console.log(res);
-        setCurrentExpense({});
-        setIsEditable(prev => !prev);
-        setRefreshExpenses(prev => !prev); // Trigger refresh
-        console.log(isEditable)
-        setShowModal(false); // Close modal after successful submission
-        toast.success("expense updated successfully")
-      })
-      .catch((err) => {
-        console.error(err)
-        toast.error(parseErrorMessage(err.response.data))
-      });
+  const editExpense = async (data) => {
+    try {
+      const expense = {
+        _id:currentExpense._id,
+        data:data
+      }
+      const response = await dispatch(updateExpense(expense))
+      console.log(response)
+      setRefreshExpenses(prev=>!prev)
+      console.log(isEditable)
+      setShowModal(false); // Close modal after successful submission
+      setCurrentExpense(null)
+      toast.success("expense updated successfully")
+    } catch (error) {
+      console.log(error)
+      toast.error(parseErrorMessage(error))
+    }
   }
 
   const exportExpenses = (data) => {
@@ -170,8 +163,7 @@ function Expenses() {
     setShowExportModal(false);
   }
 
-  if(loading) return <div className='loadercont'><div className='loader'></div></div>;
-  if(error) return <div>Error: {error}</div>;
+  if(loading || !expenses) return <div className='loadercont'><div className='loader'></div></div>;
 
   return (
     <div style={{display:"flex", flexDirection:"column", gap:"1em"}}>
@@ -253,7 +245,7 @@ function Expenses() {
         values={isEditable ? currentExpense : {}}
         type="Expense"
         isEditMode={isEditable}
-        onSubmit={isEditable?(editExpense):(addExpense)}
+        onSubmit={isEditable?(editExpense):(addExpenses)}
       />
       <ExportModal
           isOpen={showExportModal}

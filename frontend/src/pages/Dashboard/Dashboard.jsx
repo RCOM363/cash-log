@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,30 +20,22 @@ ChartJS.register(
 );
 import StackedBarChart from '../../components/StackedBarChart/StackedBarChart';
 import HorizontalBarChart from '../../components/HorizontalBarChart/HorizontalBarChart';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDashboardData } from '../../store/slices/dashboardSlice.js';
 
 import "./Dashboard.css"
 
 function Dashboard() {
-  const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch()
+  const {loading, dashboardData } = useSelector((state) => state.dashboard)
+
 
   useEffect(() => {
-    axios.get('/api/v1/users/dashboard-data')
-      .then((res) => {
-        console.log(res.data.data)
-        setDashboardData(res.data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <div className='loadercont'><div className='loader'></div></div>;
-  if (error) return <div>Error: {error}</div>;
+    dispatch(getDashboardData())
+  }, [dispatch]); 
+    
+  console.log(dashboardData)
+  if (loading || !dashboardData) return <div className='loadercont'><div className='loader'></div></div>;
 
   const {fullName,email, monthlyTotalExpenses, monthlyTotalIncomes, monthlyExpensesData, monthlyIncomesData,monthlyExpensesByCategory, monthlyIncomesByCategory,yearlyTotalExpenses,yearlyTotalIncomes,expensesByMonth, incomesByMonth, expensesByCategory, incomesByCategory } = dashboardData;
 

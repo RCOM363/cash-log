@@ -16,7 +16,7 @@ function AddUpdateModal({ isOpen, onClose, onSubmit, values, type, isEditMode })
           description: values.description,
           amount: values.amount,
           date: values.date,
-          category: values.name
+          category: values.category
         });
       } else {
         reset({

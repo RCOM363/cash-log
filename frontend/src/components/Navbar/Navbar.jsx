@@ -6,7 +6,7 @@ function Navbar() {
   return (
     <nav>
       <div className="logo">
-        <h3>&#8377;Expense Tracker</h3>
+        <h3>&#8377;CashLog</h3>
       </div>
       <div className="links">
         <Link to="signup">signup</Link>

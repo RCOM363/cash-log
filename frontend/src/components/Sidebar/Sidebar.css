@@ -122,13 +122,16 @@
     }
 
     .sidebar .mobileview .cont3{
-      width: 100%;
+      width: 100vw;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 2em;
       padding: 1em;
-      background-color: white;
+      background: rgba( 255, 255, 255, 0.65 );
+      backdrop-filter: blur( 14px );
+      -webkit-backdrop-filter: blur( 14px );
       z-index: 999;
     }
 

@@ -3,6 +3,7 @@ import './Home.css'
 import { Link } from 'react-router-dom';
 
 function Home() {
+
   return (
     <div style={{maxHeight:'100vh',overflowY:"hidden"}}>
       <div className="home-container">
@@ -10,12 +11,8 @@ function Home() {
           <h1><span>C</span>ash Log</h1><br></br>
           <p>Log your Cash to track, analyze & improve you finance.</p>
           <div className='button_container'>
-            <button>
             <Link to="Signup" className='linkb'>SignUp</Link>
-            </button>
-            <button>
             <Link to="signin" className='linkb'>SignIn</Link>
-            </button>
           </div>
         </div>
       <div className='img'>

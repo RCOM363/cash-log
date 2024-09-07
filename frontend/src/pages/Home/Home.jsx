@@ -7,9 +7,8 @@ function Home() {
     <div style={{maxHeight:'100vh',overflowY:"hidden"}}>
       <div className="home-container">
         <div className="content">
-          <h1><span>E</span>xpense Tracker</h1><br></br>
-          <p>Take control of your finances and start saving today!</p>
-          <p>Track your expenses, transform your future.</p>
+          <h1><span>C</span>ash Log</h1><br></br>
+          <p>Log your Cash to track, analyze & improve you finance.</p>
           <div className='button_container'>
             <button>
             <Link to="Signup" className='linkb'>SignUp</Link>

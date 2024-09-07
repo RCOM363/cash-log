@@ -192,7 +192,7 @@
   
   @media (max-width: 768px) {
     .home-container {
-      flex-direction: column;
+      flex-direction: column-reverse;
       align-items: center;
       height: auto;
       padding: 20px;
@@ -213,12 +213,19 @@
     }
   
     .home-container .content p {
-      font-size: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .home-container .content .button_container {
+      align-items: center;
+      flex-direction: column;
     }
   
     .home-container .content button {
-      font-size: 0.9rem;
-      padding: 8px 20px;
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.5em;
+      margin: 0;
     }
   
     .home-container .img {
@@ -230,7 +237,7 @@
   
   @media (max-width: 640px) {
     .home-container {
-      flex-direction: column;
+      flex-direction: column-reverse;
       align-items: center;
       height: auto;
       padding: 20px;
@@ -255,11 +262,14 @@
     }
   
     .home-container .content .button_container {
-      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
     .home-container .content button {
-      font-size: 0.8rem;
-      padding: 8px 15px;
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.5em;
+      margin: 0;
 
     }
   
@@ -272,9 +282,9 @@
   
   @media (max-width: 475px) {
     .home-container {
-      flex-direction: column;
+      flex-direction: column-reverse;
       align-items: center;
-      height: 600px;
+      height: 604px;
       padding: 20px;
     }
   
@@ -293,12 +303,20 @@
     }
   
     .home-container .content p {
-      font-size: 0.8rem;
+      font-size: 1.5rem;
+      margin-bottom: 1em;
     }
+
+    .home-container .content .button_container {
+      align-items: center;
+      flex-direction: column;
+  }
   
     .home-container .content button {
-      font-size: 0.7rem;
-      padding: 6px 12px;
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.5em;
+      margin: 0;
     }
   
     .home-container .img {

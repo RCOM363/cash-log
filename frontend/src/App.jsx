@@ -1,5 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import Navbar from './components/Navbar/Navbar';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Signup from './pages/Signup/Signup';
 import Signin from './pages/Signin/Signin';
@@ -10,11 +9,8 @@ import Incomes from './pages/Incomes/Incomes';
 
 function App() {
 
-  const location = useLocation();
-  const hideNavbar = location.pathname.startsWith("/dashboard");
   return (
       <>
-        {!hideNavbar && <Navbar />}
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />

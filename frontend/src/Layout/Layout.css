@@ -3,9 +3,6 @@
     height: 100%;
     display: flex;
     justify-content: center;
-    /* gap: 1em; */
-    /* padding: 1em; */
-    /* border: 1px solid black; */
 }
 
 .sidebarcont{
@@ -18,9 +15,6 @@
     flex-basis: 80%;
     position: relative;
     padding: 1em;
-    /* border-radius: 8px; */
-    /* border: 1px solid black; */
-    height: 100vh;
     overflow: auto;
 }
 
@@ -52,7 +46,6 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 1em;
-    /* border: 1px solid black; */
 }
 
 .filtercont .filterbtn{
@@ -85,7 +78,7 @@
 
     .layout .sidebarcont{
         width: 100%;
-        height: 10vh;
+        height: 9vh;
         position: fixed;
         top: 0;
         left: 0;
@@ -99,7 +92,7 @@
     }
 
     .loadercont{
-        margin-top: 3em;
+        height: 96vh;
     }
 
     .filtercont{
